@@ -1,0 +1,31 @@
+docker build -t homies .
+
+docker images /proverka/
+
+docker volume create sqldata
+
+docker run -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD=myStrongPassword12# -p 1433:1433 -v sqldata:/var/opt/mssql/sqlserver --name sqlserver -d mcr.microsoft.com/mssql/server
+
+docker compose build
+docker compose up
+docker compose down
+
+ZA AZURE:
+
+az group create --name "borislavadzholevahomiessrg" --location westeurope
+
+az acr create --resource-group borislavadzholevahomiessrg --name borislavadzholevahomiesscr --sku Basic
+
+docker tag homies borislavadzholevahomiesscr.azurecr.io/homies
+
+az acr login --name borislavadzholevahomiesscr.azurecr.io/homies
+
+docker push borislavadzholevahomiesscr.azurecr.io/homies
+
+docker context create homiescontext
+
+docker context use homiescontext
+
+docker compose up -d
+
+
